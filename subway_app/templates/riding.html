@@ -731,12 +731,18 @@
 
         function generateExitPrediction(station, index) {
             if (selectedCar) {
-                // 칸을 선택한 경우: 실제 좌석 데이터에서 해당 역에서 내릴 사람 수 계산
+                // 칸을 선택한 경우: 앱 사용자(확실) + 비사용자(추정)
                 if (currentSeats.length > 0) {
-                    const exitCount = currentSeats.filter(seat =>
+                    // 앱 사용자 중 이 역에서 내리는 사람 (확실한 정보)
+                    const appUserExits = currentSeats.filter(seat =>
                         seat.occupied && seat.exit_station === station
                     ).length;
-                    return exitCount;
+
+                    // 비앱 사용자 추정 (앱 사용자가 60%이므로, 나머지 40%를 추정)
+                    // 앱 사용자 : 비앱 사용자 = 60 : 40 = 3 : 2
+                    const nonAppUserEstimate = Math.round(appUserExits * (40 / 60));
+
+                    return appUserExits + nonAppUserEstimate;
                 } else {
                     // 좌석 데이터가 아직 로드되지 않은 경우
                     return 0;
@@ -802,10 +808,15 @@
 
             alert(`✅ ${endStation}역에 도착했습니다!\n\n안전하게 하차하세요.`);
 
-            // 초기화 페이지로 이동
-            setTimeout(() => {
-                window.location.href = '/reset';
-            }, 2000);
+            // 세션 초기화하고 초기 지도 화면으로 이동
+            fetch('/reset', {method: 'POST'})
+                .then(() => {
+                    window.location.href = '/';
+                })
+                .catch(() => {
+                    // 오류 발생 시에도 초기 화면으로 이동
+                    window.location.href = '/';
+                });
         }
     </script>
 </body>

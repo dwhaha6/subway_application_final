@@ -472,7 +472,7 @@ def wait_seat():
     })
 
 
-@app.route('/reset')
+@app.route('/reset', methods=['GET', 'POST'])
 def reset():
     """세션 초기화"""
     session.clear()
