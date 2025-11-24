@@ -264,9 +264,23 @@ def _generate_seat_data(start_station, end_station, line):
 
             if is_app_user:
                 # 앱 사용자는 하차 예정역을 알 수 있음
-                # 현재역 이후의 역 중 랜덤 선택
+                # 가까운 역일수록 높은 가중치, 먼 역일수록 낮은 가중치
                 if len(route_stations) > 1:
-                    exit_station = random.choice(route_stations[1:])
+                    # 가중치: 가까운 역(50%), 중간 역(30%), 먼 역(20%)
+                    num_stations = len(route_stations) - 1
+                    if num_stations == 1:
+                        exit_station = route_stations[1]
+                    else:
+                        third = num_stations // 3
+                        rand_val = random.random()
+                        if rand_val < 0.3:  # 30% - 가까운 1/3
+                            exit_station = random.choice(route_stations[1:1+max(1, third)])
+                        elif rand_val < 0.6:  # 30% - 중간 1/3
+                            mid_start = 1 + max(1, third)
+                            mid_end = min(len(route_stations), mid_start + max(1, third))
+                            exit_station = random.choice(route_stations[mid_start:mid_end]) if mid_start < mid_end else route_stations[-1]
+                        else:  # 40% - 먼 1/3 (목적지 포함)
+                            exit_station = random.choice(route_stations[max(1, -third):])
                 else:
                     exit_station = end_station
 

@@ -183,6 +183,55 @@
         .status-low { background: #4CAF50; }
         .status-medium { background: #FF9800; }
         .status-high { background: #F44336; }
+
+        /* 혼잡도 안내 */
+        .congestion-guide {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .guide-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .guide-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .guide-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .guide-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .guide-text {
+            flex: 1;
+        }
+
+        .guide-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .guide-desc {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
     </style>
 </head>
 <body>
@@ -215,6 +264,33 @@
         <div class="notice-box">
             💡 칸 정보를 입력하면 역마다 하차 예측 정보를 받을 수 있습니다!
         </div>
+
+        <!-- 혼잡도 설명 -->
+        <div class="congestion-guide">
+            <div class="guide-title">혼잡도 안내</div>
+            <div class="guide-item">
+                <div class="guide-color" style="background: #4CAF50;"></div>
+                <div class="guide-text">
+                    <div class="guide-label">여유 (0-50%)</div>
+                    <div class="guide-desc">좌석에 앉을 수 있어요</div>
+                </div>
+            </div>
+            <div class="guide-item">
+                <div class="guide-color" style="background: #FF9800;"></div>
+                <div class="guide-text">
+                    <div class="guide-label">보통 (50-75%)</div>
+                    <div class="guide-desc">입석이 일부 있어요</div>
+                </div>
+            </div>
+            <div class="guide-item">
+                <div class="guide-color" style="background: #F44336;"></div>
+                <div class="guide-text">
+                    <div class="guide-label">혼잡 (75-100%)</div>
+                    <div class="guide-desc">사람이 많아 불편해요</div>
+                </div>
+            </div>
+        </div>
+
         <div id="car-grid" class="car-grid"></div>
         <button class="btn btn-secondary" id="skip-btn">칸 선택 건너뛰기</button>
         <button class="btn btn-primary" id="confirm-btn" style="display: none;">확인</button>

@@ -226,7 +226,7 @@
         .seats-layout {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 10px;
             margin-top: 15px;
             max-width: 100%;
         }
@@ -239,12 +239,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 4px;
+            padding: 6px;
             font-size: 10px;
             position: relative;
             transition: all 0.3s;
             min-width: 0;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .seat.empty {
@@ -276,11 +276,11 @@
         }
 
         .seat-exit {
-            font-size: 9px;
+            font-size: 8px;
             color: #2196F3;
             font-weight: 600;
             text-align: center;
-            line-height: 1.2;
+            line-height: 1.1;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
