@@ -505,6 +505,7 @@
         let currentStationIndex = 0;
         let stationInterval;
         let progressPercentage = 0;
+        let currentSeats = []; // 좌석 데이터 저장
 
         // 역 간 평균 소요 시간 (초)
         const STATION_INTERVAL = 120; // 2분
@@ -539,6 +540,7 @@
             const container = document.getElementById('seats-layout');
             if (!container) return;
 
+            currentSeats = seats; // 좌석 데이터 저장
             container.innerHTML = '';
 
             seats.forEach(seat => {
@@ -608,6 +610,7 @@
             .then(data => {
                 if (data.status === 'ok') {
                     displaySeats(data.seats);
+                    updateStationList(); // 하차 예측 업데이트
                     alert(data.message);
                 } else {
                     alert(data.message);
@@ -625,6 +628,7 @@
             .then(data => {
                 if (data.status === 'ok') {
                     displaySeats(data.seats);
+                    updateStationList(); // 하차 예측 업데이트
                     alert(data.message);
                 }
             });
@@ -728,15 +732,20 @@
         }
 
         function generateExitPrediction(station, index) {
-            // 실제로는 서버에서 받아와야 함
-            // 현재는 랜덤 생성 (칸별 하차 예측)
-            if (station === endStation) {
-                return selectedCar ? Math.floor(Math.random() * 5) + 8 : 80; // 도착역은 많이 내림
+            if (selectedCar && currentSeats.length > 0) {
+                // 실제 좌석 데이터에서 해당 역에서 내릴 사람 수 계산
+                const exitCount = currentSeats.filter(seat =>
+                    seat.occupied && seat.exit_station === station
+                ).length;
+                return exitCount;
+            } else {
+                // 칸을 선택하지 않은 경우 전체 하차 예측 (랜덤)
+                if (station === endStation) {
+                    return 80; // 도착역은 많이 내림
+                }
+                // 일반 역
+                return Math.floor(Math.random() * 3) + 1;
             }
-
-            // 일반 역
-            const baseExit = Math.floor(Math.random() * 3) + 1;
-            return baseExit;
         }
 
         function checkAlerts() {
@@ -773,6 +782,8 @@
             .then(data => {
                 if (data.status === 'ok') {
                     displaySeats(data.seats);
+                    // 좌석 업데이트 후 역 리스트도 업데이트 (하차 예측 갱신)
+                    updateStationList();
                 }
             });
         }
