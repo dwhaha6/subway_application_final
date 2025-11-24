@@ -214,10 +214,10 @@
             margin-left: 8px;
         }
 
-        /* 좌석 배치 스타일 */
+        /* 좌석 배치 스타일 - 시뮬레이션 */
         .seats-card {
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 16px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -226,7 +226,7 @@
         .seats-layout {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
+            gap: 8px;
             margin-top: 15px;
             max-width: 100%;
         }
@@ -234,13 +234,13 @@
         .seat {
             aspect-ratio: 1;
             border: 2px solid #e0e0e0;
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2px;
-            font-size: 8px;
+            padding: 4px;
+            font-size: 10px;
             position: relative;
             transition: all 0.3s;
             min-width: 0;
@@ -270,17 +270,17 @@
 
         .seat-number {
             font-weight: 700;
-            font-size: 9px;
+            font-size: 11px;
             color: #333;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
         }
 
         .seat-exit {
-            font-size: 7px;
+            font-size: 9px;
             color: #2196F3;
             font-weight: 600;
             text-align: center;
-            line-height: 1;
+            line-height: 1.2;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -288,28 +288,28 @@
         }
 
         .seat-status {
-            font-size: 7px;
+            font-size: 9px;
             color: #666;
         }
 
         .seat-waiters {
-            font-size: 6px;
+            font-size: 8px;
             color: #FF9800;
             font-weight: 600;
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
         .seat-actions {
             display: flex;
-            gap: 1px;
-            margin-top: 1px;
+            gap: 2px;
+            margin-top: 2px;
         }
 
         .seat-btn {
-            font-size: 7px;
-            padding: 1px 3px;
+            font-size: 9px;
+            padding: 2px 5px;
             border: 1px solid #ddd;
-            border-radius: 2px;
+            border-radius: 3px;
             background: white;
             cursor: pointer;
             transition: all 0.2s;
@@ -332,21 +332,21 @@
         .seats-legend {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 10px;
+            gap: 12px;
+            margin-top: 15px;
+            font-size: 12px;
             flex-wrap: wrap;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
         .legend-box {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 3px;
             border: 2px solid;
             flex-shrink: 0;
@@ -377,40 +377,40 @@
             }
 
             .seats-card {
-                padding: 15px;
+                padding: 20px;
             }
 
             .seats-layout {
                 grid-template-columns: repeat(7, 1fr);
-                gap: 3px;
-            }
-
-            .seat {
-                font-size: 7px;
-                padding: 1px;
-            }
-
-            .seat-number {
-                font-size: 8px;
-            }
-
-            .seat-exit {
-                font-size: 6px;
-            }
-
-            .seat-btn {
-                font-size: 6px;
-                padding: 1px 2px;
-            }
-
-            .seats-legend {
-                font-size: 9px;
                 gap: 6px;
             }
 
+            .seat {
+                font-size: 9px;
+                padding: 3px;
+            }
+
+            .seat-number {
+                font-size: 10px;
+            }
+
+            .seat-exit {
+                font-size: 8px;
+            }
+
+            .seat-btn {
+                font-size: 8px;
+                padding: 2px 4px;
+            }
+
+            .seats-legend {
+                font-size: 11px;
+                gap: 10px;
+            }
+
             .legend-box {
-                width: 10px;
-                height: 10px;
+                width: 12px;
+                height: 12px;
             }
         }
     </style>
@@ -450,10 +450,24 @@
             <div class="notice-text" id="notice-text"></div>
         </div>
 
-        <!-- 좌석 배치 (칸 선택한 경우만) -->
+        <!-- 하차 예측 정보 -->
+        <div class="prediction-card">
+            <div class="card-title">
+                {% if selected_car %}
+                {{ selected_car }}호차 하차 예측 정보
+                {% else %}
+                전체 하차 예측 정보
+                {% endif %}
+            </div>
+            <div class="station-list" id="station-list">
+                <!-- JavaScript로 동적 생성 -->
+            </div>
+        </div>
+
+        <!-- 시뮬레이션: 좌석 배치 (칸 선택한 경우만) -->
         {% if selected_car %}
         <div class="seats-card">
-            <div class="card-title">{{ selected_car }}호차 실시간 좌석 정보</div>
+            <div class="card-title">🎮 시뮬레이션: {{ selected_car }}호차 실시간 좌석</div>
             <div class="seats-layout" id="seats-layout">
                 <!-- JavaScript로 동적 생성 -->
             </div>
@@ -477,20 +491,6 @@
             </div>
         </div>
         {% endif %}
-
-        <!-- 하차 예측 정보 -->
-        <div class="prediction-card">
-            <div class="card-title">
-                {% if selected_car %}
-                {{ selected_car }}호차 하차 예측 정보
-                {% else %}
-                전체 하차 예측 정보
-                {% endif %}
-            </div>
-            <div class="station-list" id="station-list">
-                <!-- JavaScript로 동적 생성 -->
-            </div>
-        </div>
     </div>
 
     <script>
