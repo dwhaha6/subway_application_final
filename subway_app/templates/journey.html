@@ -285,9 +285,17 @@
 
                     if (remainingSeconds <= 0) {
                         clearInterval(interval);
-                        // 시간이 0이 되면 카드 비활성화
-                        card.style.opacity = '0.5';
-                        card.style.pointerEvents = 'none';
+                        // 시간이 0이 되면 카드를 화면에서 제거
+                        card.style.transition = 'opacity 0.5s, transform 0.5s';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            card.remove();
+                            // 모든 열차가 사라졌는지 확인
+                            if (container.children.length === 0) {
+                                container.innerHTML = '<div class="loading">도착 예정인 열차가 없습니다</div>';
+                            }
+                        }, 500);
                     }
                 }, 1000);
 
