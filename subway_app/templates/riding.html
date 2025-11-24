@@ -517,13 +517,13 @@
         };
 
         function initializeJourney() {
-            // 역 리스트 표시
-            updateStationList();
-
             // 좌석 정보 로드 (칸 선택한 경우만)
             if (selectedCar) {
                 loadSeats();
             }
+
+            // 역 리스트 표시 (좌석 로드 후 또는 칸 미선택 시)
+            updateStationList();
         }
 
         function loadSeats() {
@@ -532,6 +532,8 @@
                 .then(data => {
                     if (data.status === 'ok') {
                         displaySeats(data.seats);
+                        // 좌석 로드 후 역 리스트 업데이트
+                        updateStationList();
                     }
                 });
         }
@@ -728,14 +730,19 @@
         }
 
         function generateExitPrediction(station, index) {
-            if (selectedCar && currentSeats.length > 0) {
+            if (selectedCar) {
                 // 칸을 선택한 경우: 실제 좌석 데이터에서 해당 역에서 내릴 사람 수 계산
-                const exitCount = currentSeats.filter(seat =>
-                    seat.occupied && seat.exit_station === station
-                ).length;
-                return exitCount;
+                if (currentSeats.length > 0) {
+                    const exitCount = currentSeats.filter(seat =>
+                        seat.occupied && seat.exit_station === station
+                    ).length;
+                    return exitCount;
+                } else {
+                    // 좌석 데이터가 아직 로드되지 않은 경우
+                    return 0;
+                }
             } else {
-                // 칸을 선택하지 않은 경우: 전체 10개 칸 기준 하차 예측 (칸당 1-3명 × 10)
+                // 칸을 선택하지 않은 경우: 전체 10개 칸 기준 하차 예측
                 if (station === endStation) {
                     // 목적지는 대부분 하차 (칸당 평균 8-12명 × 10칸 = 80-120명)
                     return Math.floor(Math.random() * 41) + 80; // 80-120명
