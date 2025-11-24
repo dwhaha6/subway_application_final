@@ -447,6 +447,11 @@ def wait_seat():
     seat_no = request.json.get('seat_no')
     seats = session.get('seats', [])
 
+    # 이미 사용자가 앉아있는 좌석이 있는지 확인
+    for seat in seats:
+        if seat.get('is_current_user', False):
+            return jsonify({"status": "error", "message": "이미 좌석에 앉아있습니다. 대기할 수 없습니다"}), 400
+
     updated_seats = []
     for seat in seats:
         if seat['seat_no'] == seat_no:
