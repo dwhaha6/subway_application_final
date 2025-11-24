@@ -718,11 +718,7 @@
                 } else {
                     // 하차 예측 생성
                     const exitCount = generateExitPrediction(station, index);
-                    if (selectedCar) {
-                        predictionDiv.innerHTML = `예상 하차: <span class="exit-count">${exitCount}명</span>`;
-                    } else {
-                        predictionDiv.innerHTML = `예상 하차: <span class="exit-count">${exitCount * 10}명</span>`;
-                    }
+                    predictionDiv.innerHTML = `예상 하차: <span class="exit-count">${exitCount}명</span>`;
                 }
 
                 item.appendChild(stationNameDiv);
@@ -733,18 +729,19 @@
 
         function generateExitPrediction(station, index) {
             if (selectedCar && currentSeats.length > 0) {
-                // 실제 좌석 데이터에서 해당 역에서 내릴 사람 수 계산
+                // 칸을 선택한 경우: 실제 좌석 데이터에서 해당 역에서 내릴 사람 수 계산
                 const exitCount = currentSeats.filter(seat =>
                     seat.occupied && seat.exit_station === station
                 ).length;
                 return exitCount;
             } else {
-                // 칸을 선택하지 않은 경우 전체 하차 예측 (랜덤)
+                // 칸을 선택하지 않은 경우: 전체 10개 칸 기준 하차 예측 (칸당 1-3명 × 10)
                 if (station === endStation) {
-                    return 80; // 도착역은 많이 내림
+                    // 목적지는 대부분 하차 (칸당 평균 8-12명 × 10칸 = 80-120명)
+                    return Math.floor(Math.random() * 41) + 80; // 80-120명
                 }
-                // 일반 역
-                return Math.floor(Math.random() * 3) + 1;
+                // 일반 역 (칸당 평균 1-3명 × 10칸 = 10-30명)
+                return Math.floor(Math.random() * 21) + 10; // 10-30명
             }
         }
 
