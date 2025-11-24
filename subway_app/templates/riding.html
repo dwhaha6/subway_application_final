@@ -517,6 +517,9 @@
         };
 
         function initializeJourney() {
+            // 현재 역 정보 초기화
+            updateCurrentStation();
+
             // 좌석 정보 로드 (칸 선택한 경우만)
             if (selectedCar) {
                 loadSeats();
