@@ -413,6 +413,11 @@ def sit_seat():
         if seat.get('is_current_user', False):
             return jsonify({"status": "error", "message": "이미 다른 좌석에 앉아있습니다"}), 400
 
+    # 이미 대기 중인 좌석이 있는지 확인
+    waiting_seat = session.get('waiting_seat_no')
+    if waiting_seat is not None:
+        return jsonify({"status": "error", "message": f"이미 {waiting_seat}번 좌석을 대기 중입니다. 대기를 취소하고 착석해주세요."}), 400
+
     updated_seats = []
     for seat in seats:
         if seat['seat_no'] == seat_no:
@@ -433,6 +438,8 @@ def sit_seat():
             updated_seats.append(seat)
 
     session['seats'] = updated_seats
+    # 착석했으므로 대기 정보 초기화
+    session.pop('waiting_seat_no', None)
 
     return jsonify({
         "status": "ok",
@@ -452,6 +459,32 @@ def wait_seat():
         if seat.get('is_current_user', False):
             return jsonify({"status": "error", "message": "이미 좌석에 앉아있습니다. 대기할 수 없습니다"}), 400
 
+    # 이미 대기 중인 좌석이 있는지 확인
+    waiting_seat = session.get('waiting_seat_no')
+    if waiting_seat is not None:
+        if waiting_seat == seat_no:
+            # 같은 좌석을 다시 누르면 대기 취소
+            session.pop('waiting_seat_no', None)
+            updated_seats = []
+            for seat in seats:
+                if seat['seat_no'] == seat_no:
+                    updated_seats.append({
+                        **seat,
+                        'waiters': max(0, seat.get('waiters', 0) - 1)
+                    })
+                else:
+                    updated_seats.append(seat)
+            session['seats'] = updated_seats
+            return jsonify({
+                "status": "ok",
+                "message": f"{seat_no}번 좌석 대기 취소",
+                "seats": updated_seats
+            })
+        else:
+            return jsonify({"status": "error", "message": f"이미 {waiting_seat}번 좌석을 대기 중입니다. 한 좌석만 대기 가능합니다."}), 400
+
+    # 대기 등록
+    session['waiting_seat_no'] = seat_no
     updated_seats = []
     for seat in seats:
         if seat['seat_no'] == seat_no:
