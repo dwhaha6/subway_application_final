@@ -62,16 +62,8 @@ subway_app/
 
 ## 🚀 실행 방법
 
-```bash
-# 가상환경 활성화 (Windows)
-. venv/Scripts/activate
-
-# 서버 실행
-cd subway_app
-python app.py
-```
-
-브라우저에서 `http://localhost:5000` 접속
+브라우저에서 https://subway-application-final.onrender.com/ 접속
+  - 스마트폰 용으로 제작했기에 스마트폰 접속을 추천!
 
 ## 🔑 API 키 설정
 
