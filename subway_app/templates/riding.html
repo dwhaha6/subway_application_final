@@ -221,6 +221,10 @@
             border-radius: 16px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            /* 모바일에서 전체 너비 사용 */
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
         }
 
         .seats-layout {
@@ -281,9 +285,10 @@
             font-weight: 600;
             text-align: center;
             line-height: 1.1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* 텍스트 줄바꿈 허용 - 역 이름이 길어도 다 보이도록 */
+            white-space: normal;
+            word-break: keep-all;
+            overflow-wrap: break-word;
             max-width: 100%;
         }
 
@@ -377,17 +382,20 @@
             }
 
             .seats-card {
-                padding: 20px;
+                padding: 12px;
+                margin-left: -10px;
+                margin-right: -10px;
+                width: calc(100% + 20px);
             }
 
             .seats-layout {
                 grid-template-columns: repeat(7, 1fr);
-                gap: 6px;
+                gap: 4px;
             }
 
             .seat {
                 font-size: 9px;
-                padding: 3px;
+                padding: 4px 2px;
             }
 
             .seat-number {
@@ -395,7 +403,8 @@
             }
 
             .seat-exit {
-                font-size: 8px;
+                font-size: 7.5px;
+                line-height: 1.2;
             }
 
             .seat-btn {
